@@ -30,4 +30,7 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById('showNotificationBtn').addEventListener('click', function() {
         alert('Notification: This is an example notification.');
     });
+
+
+    
 });
