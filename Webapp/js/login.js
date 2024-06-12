@@ -24,7 +24,7 @@ async function login() {
     }   
 
 
-    const encodedPassword = encodePassword(password);
+   // const encodedPassword = encodePassword(password);
 
     
     // Proceed with the login request
@@ -40,8 +40,13 @@ async function login() {
         const data = await response.json();
         localStorage.setItem('token', data.token);
         alert('Logged in successfully!');
+        console.log(data.token);
+        window.location.replace("index.html");
+        
     } else {
         errorMessage.textContent = 'Login failed';
     }
+
+
     
 }
