@@ -26,7 +26,34 @@ async function login() {
 
    // const encodedPassword = encodePassword(password);
 
+   
+   $.ajax({
+    url: apiBaseUrl + "/api/User/LogIn",
+    type: "POST",
+    contentType: "application/json",
+    data: JSON.stringify({ "username": username, "password": password })
+    })
+        .done(function(data, textStatus, jqXHR){
+            console.log(data);
+            if(data.isSuccess){
+                localStorage.setItem('token', data.token);
+                alert('Logged in successfully!');
+                console.log(data.token);
+                window.location.replace("index.html");
+            }else{
+                $(data.errorMessages).each(function(){
+                    errorMessage.textContent = 'Login failed';
+                });
+            }
+        })
+        .fail(function(jqXHR, textStatus, errorThrown){
+            console.log(jqXHR);
+            errorMessage.textContent = 'Connection failed';
+        })
+        .always(function(data_OR_jqXHR, textStatus, jqXHR_OR_errorThrown){
+    });
     
+    return;
     // Proceed with the login request
     const response = await fetch(`${apiBaseUrl}/login`, {
         method: 'POST',
