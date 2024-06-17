@@ -1,4 +1,4 @@
-const apiBaseUrl = 'http://localhost:5000'; // Change this to your API base URL
+const apiBaseUrl = 'http://localhost:5049'; // Change this to your API base URL
 
 async function login() {
     const username = document.getElementById('login-username').value;
@@ -35,12 +35,13 @@ async function login() {
     })
         .done(function(data, textStatus, jqXHR){
             console.log(data);
-            if(data.isSuccess){
-                localStorage.setItem('token', data.token);
-                alert('Logged in successfully!');
-                console.log(data.token);
-                window.location.replace("index.html");
-            }else{
+            if (true) {
+            localStorage.setItem('token', data);
+            alert('Logged in successfully!');
+            console.log(data);
+            window.location.href = "index.html";
+            }
+            else{
                 $(data.errorMessages).each(function(){
                     errorMessage.textContent = 'Login failed';
                 });
