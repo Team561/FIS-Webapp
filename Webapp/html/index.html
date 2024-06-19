@@ -23,7 +23,6 @@
                 <li><a href="#map">Map</a></li>
                 <li><a href="#contact">Contact</a></li>
                 <li><a href="login.html">Login</a></li>
-               
             </ul>
         </div>
     </nav>
@@ -49,8 +48,32 @@
             <p>&copy; 2024 Firefighting Web App</p>
         </div>
     </footer>
+
+    <!-- Modal for adding intervention -->
+    <div id="addInterventionModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add Intervention</h2>
+            <form id="interventionForm">
+                <label for="firefighter">Select Firefighter:</label>
+                <select id="firefighter" name="firefighter">
+                    <!-- Options will be dynamically added via JavaScript -->
+                </select>
+                <br><br>
+                <label for="interventionType">Intervention Type:</label>
+                <select id="interventionType" name="interventionType">
+                    <option value="active">Active</option>
+                    <option value="nonActive">Non Active</option>
+                </select>
+                <br><br>
+                <button type="button" id="addInterventionBtn">Add</button>
+            </form>
+        </div>
+    </div>
+
     <!-- Include Leaflet JavaScript -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <!-- Include your custom JavaScript -->
     <script src="../js/script.js"></script>
 </body>
 </html>
