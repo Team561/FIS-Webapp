@@ -1,5 +1,3 @@
-// script.js
-
 const apiBaseUrl = 'http://localhost:5049'; // Change this to your API base URL
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -10,6 +8,9 @@ document.addEventListener('DOMContentLoaded', function () {
         maxZoom: 18,
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(mymap);
+
+    // Array to store current interventions
+    var interventions = [];
 
     // Function to fetch ranks from your API
     async function fetchRanks() {
@@ -97,8 +98,111 @@ document.addEventListener('DOMContentLoaded', function () {
                 option.dataset.rankId = firefighter.rankId;
                 firefighterSelect.appendChild(option);
             });
+
+            //populating list below the map
+            var firefighterList = document.getElementById('firefighterList');
+            firefighterList.innerHTML = ''; // Clear existing list
+            allFirefighters.forEach(firefighter => {
+                var listItem = document.createElement('li');
+                let rankName = ranksMap[firefighter.rankId] || 'Unknown Rank';
+                listItem.textContent = `${firefighter.name} (Rank: ${rankName})`;
+                firefighterList.appendChild(listItem);
+            });
+
+            
+            // Check firefighter ID and set map visibility
+            allFirefighters.forEach(firefighter => {
+                if (firefighter.id === 2 || firefighter.id === 3 || firefighter.id === 4) {
+                    document.getElementById('mapid').style.display = 'none';
+                }
+            });
+            
         } catch (error) {
             console.error('There was a problem with fetching and populating firefighters:', error);
+        }
+    }
+
+    async function fetchNotifications() {
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                console.error('No authentication token found. Please log in.');
+                return;
+            }
+
+            let response = await fetch(`${apiBaseUrl}/api/Invitation/FetchUserInvitations`, {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok for FetchNotifications ' + response.statusText);
+            }
+
+            let notifications = await response.json();
+            displayNotifications(notifications);
+        } catch (error) {
+            console.error('There was a problem with fetching notifications:', error);
+        }
+    }
+
+    function displayNotifications(notifications) {
+        var notificationsContainer = document.getElementById('showNotificationBtn');
+        notificationsContainer.innerHTML = ''; // Clear existing notifications
+
+        notifications.forEach(notification => {
+            var notificationElement = document.createElement('div');
+            notificationElement.className = 'notification';
+            notificationElement.innerHTML = `
+                <p>${notification.message} - ${notification.streetName}</p>
+                <button class="accept-btn" data-id="${notification.id}">Accept</button>
+                <button class="decline-btn" data-id="${notification.id}">Decline</button>
+            `;
+            notificationsContainer.appendChild(notificationElement);
+        });
+
+        // Add event listeners for accept and decline buttons
+        document.querySelectorAll('.accept-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                handleNotificationResponse(this.dataset.id, true);
+            });
+        });
+
+        document.querySelectorAll('.decline-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                handleNotificationResponse(this.dataset.id, false);
+            });
+        });
+    }
+
+    async function handleNotificationResponse(notificationId, isAccepted) {
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                console.error('No authentication token found. Please log in.');
+                return;
+            }
+
+            let response = await fetch(`${apiBaseUrl}/api/Notifications/Respond`, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ notificationId, isAccepted })
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok for HandleNotificationResponse ' + response.statusText);
+            }
+
+            // Refetch notifications after response
+            fetchNotifications();
+        } catch (error) {
+            console.error('There was a problem with handling notification response:', error);
         }
     }
 
@@ -126,6 +230,11 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             var marker = L.marker(latlng).addTo(mymap).bindPopup(`Firefighter ID: ${firefighterId}<br>Intervention Type: ${interventionType}<br>Rank ID: ${firefighterRankId}`);
+            interventions.push({
+                id: firefighterId,
+                type: interventionType,
+                latlng: latlng
+            });
             modal.style.display = "none";
         }
     }
@@ -136,6 +245,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var showNotificationBtn = document.getElementById("showNotificationBtn");
     showNotificationBtn.onclick = function () {
-        alert("Notification shown!");
+        if (interventions.length > 0) {
+            let lastIntervention = interventions[interventions.length - 1];
+            alert(`Current Intervention:\nAddress: ${lastIntervention.latlng.lat}, ${lastIntervention.latlng.lng}\nType: ${lastIntervention.type}`);
+        } else {
+            alert("No current interventions on the map.");
+        }
     }
 });
