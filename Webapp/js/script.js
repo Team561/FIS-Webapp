@@ -253,3 +253,29 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 });
+
+class Refresh{
+    static funcsToCall = [];
+
+    static subscribeToRefreshTimer(func){
+        Refresh.funcsToCall.push(func);
+    }
+    
+    static triggerRefreshFunctions(){
+        Refresh.funcsToCall.forEach(function(func){
+            func();
+        });
+        Refresh.triggerNewTimer();
+    }
+
+    static triggerNewTimer(){
+        setTimeout(Refresh.triggerRefreshFunctions, 200);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    Refresh.triggerNewTimer();
+    Refresh.subscribeToRefreshTimer(function(){
+        console.log("PULSE");
+    })
+});
