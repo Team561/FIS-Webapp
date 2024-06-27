@@ -279,3 +279,44 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log("PULSE");
     })
 });
+
+class InterventionTypeBroker{
+    static interventionTypes = [];
+
+    static async refreshTypes(){
+        let types = await Comms.fetchInterventionTypes();
+
+        InterventionTypeBroker.interventionTypes = [];
+
+        console.log("REFRESH TYPES");
+
+        types.$values.forEach(function(type){
+            InterventionTypeBroker.interventionTypes.push({idType: type.idType, name: type.name});
+        });
+
+        console.log(InterventionTypeBroker.interventionTypes);
+        console.log(InterventionTypeBroker.getTypeFromID(1));
+        console.log(InterventionTypeBroker.getTypeFromID(2));
+        console.log(InterventionTypeBroker.getTypeFromID(3));
+    }
+
+    static getTypeFromID(targetID){
+        let result = null;
+
+        InterventionTypeBroker.interventionTypes.forEach(function(type){
+            if (type.idType == targetID)
+                result = type.name;
+        });
+
+        if (Boolean(result))
+            return result;
+
+        PushNotifs.pushNotificationFail("Error", "Type id does not exist, refresh the page?");
+
+        return "Error";
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    InterventionTypeBroker.refreshTypes();
+});

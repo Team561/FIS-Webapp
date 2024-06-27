@@ -133,3 +133,9 @@ footer {
     color: black;
     text-decoration: none;
 }
+
+flex-row{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
