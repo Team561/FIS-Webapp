@@ -21,7 +21,7 @@ async function login() {
     data: JSON.stringify({ "username": username, "password": password })
     })
         .done(function(data, textStatus, jqXHR){
-            localStorage.setItem('token', data);
+            localStorage.setItem('authToken', data);
             alert('Logged in successfully!');
             console.log(data);
             window.location.href = "index.html";

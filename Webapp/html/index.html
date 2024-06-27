@@ -62,17 +62,45 @@
 
             <section>
                 <h2>Invitations</h2>
-                <div id="invitationList">
-                    <flex-row>
-                        <div>
-                            
+                <flex-column id="invitationList">
+                    <flex-row class="fWrap">
+                        <div class="fEqGrow">
+                            <div>
+                                Intervention ID: 45
+                            </div>
+                            <div>
+                                Location: 7367238658237.2785928759328, 23857293857329.238759832759
+                            </div>
+                            <div>
+                                Type: FIREEE   
+                            </div> 
                         </div>
-                        <div>
-                            <div> ACCEPT REQUEST </div>
-                            <div> DECLINE REQUEST </div>
-                        </div>
+
+                        <flex-column class="fCentered fEqGrow" style="flex-grow: 1;">
+                            <button> ACCEPT REQUEST </button>
+                            <button> DECLINE REQUEST </button>
+                        </flex-column>
                     </flex-row>
-                </div>
+
+                    <flex-row class="fWrap">
+                        <div class="fEqGrow">
+                            <div>
+                                Intervention ID: 46
+                            </div>
+                            <div>
+                                Location: 73637.278328, 238572939.59
+                            </div>
+                            <div>
+                                Type: Technical   
+                            </div>
+                        </div>
+
+                        <flex-column class="fCentered fEqGrow" style="flex-grow: 1;">
+                            <button> ACCEPT REQUEST </button>
+                            <button> DECLINE REQUEST </button>
+                        </flex-column>
+                    </flex-row>
+                </flex-column>
             </section>
 
             <section id="contact">
@@ -112,7 +140,7 @@
     <!-- Include Leaflet JavaScript -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <!-- Include your custom JavaScript -->
-    <script src="../js/script.js"></script>
     <script src="../js/comms.js"></script>
+    <script src="../js/script.js"></script>
 </body>
 </html>

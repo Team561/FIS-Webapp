@@ -271,8 +271,221 @@ class Comms {
         }
     }
 
-}
+    static async fetchRanks() {
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                console.error('No authentication token found. Please log in.');
+                return null;
+            }
+    
+            let response = await fetch(`${Comms.apiBaseUrl}/api/User/FetchRanks`, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
+            });
+    
+            if (!response.ok) {
+                throw new Error('Network response was not ok for FetchRanks ' + response.statusText);
+            }
+    
+            let ranksData = await response.json();
+            console.log('Fetched ranks:', ranksData);
+    
+            let ranksMap = ranksData.$values.reduce((acc, rank) => {
+                acc[rank.idRank] = rank.name;
+                return acc;
+            }, {});
+    
+            console.log('Ranks map:', ranksMap);
+            return ranksMap;
+        } catch (error) {
+            console.error('There was a problem with fetching ranks:', error);
+            return null;
+        }
+    }
+    
+    static async fetchCommanderFirefighters(includeActive, includeInactive) {
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                console.error('No authentication token found. Please log in.');
+                return;
+            }
+    
+            const ranksMap = await fetchRanks();
+            if (!ranksMap) {
+                console.error('Ranks map could not be created.');
+                return;
+            }
+    
+            let response = await fetch(`${Comms.apiBaseUrl}/api/User/FetchCommanderFirefighters?includeActive=${includeActive}&includeInactive${includeInactive}`, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
+            });
+    
+            if (!response.ok) {
+                throw new Error('Network response was not ok for FetchCommanderFirefighters ' + response.statusText);
+            }
+            return response;
+        } catch (error) {
+            console.error('There was a problem with fetching and populating firefighters:', error);
+        }
+    }
+    
+    static async FetchPersonalData(additionalData){
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                console.error('No authentication token found. Please log in.');
+                return null;
+            }
+    
+            let response = await fetch(`${Comms.apiBaseUrl}/api/User/FetchPersonalData?includeAdditionalData=${additionalData}`, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ additionalData })
+            });
+    
+            if (!response.ok) {
+                throw new Error('Network response was not ok for Fetch of personal data ' + response.statusText);
+            }
+    
+            let interventions = await response.json();
+            console.log('Fetched personal data:', interventions);
+            return interventions;
+        } catch (error) {
+            console.error('There was a problem with fetching personal data:', error);
+            return null;
+        }
+    }
+    
+    static async FetchUserInvitations(){
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                console.error('No authentication token found. Please log in.');
+                return null;
+            }
+    
+            let response = await fetch(`${Comms.apiBaseUrl}/api/Invitation/FetchUserInvitations`, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ })
+            });
+    
+            if (!response.ok) {
+                throw new Error('Network response was not ok for fetching invitations ' + response.statusText);
+            }
 
+            return await response.json();;
+        } catch (error) {
+            console.error('There was a problem with fetching the invitations:', error);
+            return false;
+        }
+    }
+    
+    static async AcceptInterventionInvitation(interventionId){
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                console.error('No authentication token found. Please log in.');
+                return null;
+            }
+    
+            let response = await fetch(`${Comms.apiBaseUrl}/api/Intervention/AcceptIntervention?interventionID=${interventionId}`, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ interventionId })
+            });
+    
+            if (!response.ok) {
+                throw new Error('Network response was not ok for accepting intervention ' + response.statusText);
+            }
+    
+            console.log('Participants:', interventionId);
+            return true;
+        } catch (error) {
+            console.error('There was a problem with recovering the intervention:', error);
+            return false;
+        }
+    }
+    
+    static async DeclineInterventionInvitation(interventionId){
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                console.error('No authentication token found. Please log in.');
+                return null;
+            }
+    
+            let response = await fetch(`${Comms.apiBaseUrl}/api/Invitation/DeclineIntervnetionInvitation?interventionID=${interventionId}`, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ interventionId })
+            });
+    
+            if (!response.ok) {
+                throw new Error('Network response was not ok for declining intervention ' + response.statusText);
+            }
+    
+            console.log('Participants:', interventionId);
+            return true;
+        } catch (error) {
+            console.error('There was a problem with recovering the intervention:', error);
+            return false;
+        }
+    }
+    
+    static async InviteFireFighterToInvitation(interventionId,firefighterId){
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                console.error('No authentication token found. Please log in.');
+                return null;
+            }
+    
+            let response = await fetch(`${Comms.apiBaseUrl}/api/Invitation/InviteFirefighterToIntervention?interventionID=${interventionId}&firefighterId=${firefighterId}`, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ interventionId,firefighterId })
+            });
+    
+            if (!response.ok) {
+                throw new Error('Network response was not ok for invite ' + response.statusText);
+            }
+    
+            console.log('Participants:', interventionId);
+            return true;
+        } catch (error) {
+            console.error('There was a problem with  the intervention:', error);
+            return false;
+        }
+    }
+}
+/*
 async function fetchRanks() {
     try {
         const token = localStorage.getItem('authToken');
@@ -372,6 +585,34 @@ async function FetchPersonalData(additionalData){
     }
 }
 
+async function FetchUserInvitations(){
+    try {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            console.error('No authentication token found. Please log in.');
+            return null;
+        }
+
+        let response = await fetch(`${Comms.apiBaseUrl}/api/Intervention/FetchUserInvitations`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ })
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok for accepting intervention ' + response.statusText);
+        }
+
+        console.log('Participants:', interventionId);
+        return true;
+    } catch (error) {
+        console.error('There was a problem with recovering the intervention:', error);
+        return false;
+    }
+
 async function AcceptInterventionInvitation(interventionId){
     try {
         const token = localStorage.getItem('authToken');
@@ -399,7 +640,6 @@ async function AcceptInterventionInvitation(interventionId){
         console.error('There was a problem with recovering the intervention:', error);
         return false;
     }
-
 }
 
 async function DeclineInterventionInvitation(interventionId){
@@ -459,3 +699,5 @@ async function InviteFireFighterToInvitation(interventionId,firefighterId){
         return false;
     }
 }
+}
+*/

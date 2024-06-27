@@ -254,6 +254,19 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
+class InvitationsHandler{
+    static invitations = [];
+
+    static async refreshInvitations(){
+        let fetchedInvitations = await Comms.FetchUserInvitations();
+
+        console.log("INVITATIONS")
+        console.log(fetchedInvitations);
+    }
+}
+
+InvitationsHandler.refreshInvitations();
+
 class Refresh{
     static funcsToCall = [];
 
@@ -293,11 +306,6 @@ class InterventionTypeBroker{
         types.$values.forEach(function(type){
             InterventionTypeBroker.interventionTypes.push({idType: type.idType, name: type.name});
         });
-
-        console.log(InterventionTypeBroker.interventionTypes);
-        console.log(InterventionTypeBroker.getTypeFromID(1));
-        console.log(InterventionTypeBroker.getTypeFromID(2));
-        console.log(InterventionTypeBroker.getTypeFromID(3));
     }
 
     static getTypeFromID(targetID){
@@ -320,3 +328,5 @@ class InterventionTypeBroker{
 document.addEventListener('DOMContentLoaded', function () {
     InterventionTypeBroker.refreshTypes();
 });
+
+
