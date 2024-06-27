@@ -152,6 +152,7 @@ class Comms {
         }
     }
 
+    /*
     static async setInterventionState(interventionId, state) {
         try {
             const token = localStorage.getItem('authToken');
@@ -180,8 +181,9 @@ class Comms {
             return false;
         }
     }
+    */
 
-    static async createIntervention() {
+    static async createIntervention(location, interventionTypeID) {
         try {
             const token = localStorage.getItem('authToken');
             if (!token) {
@@ -195,7 +197,7 @@ class Comms {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({})
+                body: JSON.stringify({location, interventionTypeID})
             });
 
             if (!response.ok) {
@@ -270,6 +272,7 @@ class Comms {
     }
 
 }
+
 async function fetchRanks() {
     try {
         const token = localStorage.getItem('authToken');
@@ -307,9 +310,7 @@ async function fetchRanks() {
     }
 }
 
-async function fetchAndPopulateFirefighters(includeActive,includeActive) {
-  
-    
+async function fetchCommanderFirefighters(includeActive,includeActive) {
     try {
         const token = localStorage.getItem('authToken');
         if (!token) {
@@ -336,45 +337,6 @@ async function fetchAndPopulateFirefighters(includeActive,includeActive) {
             throw new Error('Network response was not ok for FetchCommanderFirefighters ' + response.statusText);
         }
         return response;
-        let responseData = await response.json();
-        console.log('Fetched firefighters data:', responseData);
-
-        let activeFirefighters = responseData.activeFirefighters.$values;
-        let inactiveFirefighters = responseData.inactiveFirefighters.$values;
-
-        let allFirefighters = [...activeFirefighters, ...inactiveFirefighters];
-        console.log('All firefighters:', allFirefighters);
-
-        var firefighterSelect = document.getElementById('firefighter');
-        firefighterSelect.innerHTML = ''; // Clear existing options
-        allFirefighters.forEach(firefighter => {
-            console.log('Firefighter:', firefighter);
-            var option = document.createElement('option');
-            option.value = firefighter.id;
-            let rankName = ranksMap[firefighter.rankId] || 'Unknown Rank';
-            option.textContent = `${firefighter.name} (Rank: ${rankName})`;
-            option.dataset.rankId = firefighter.rankId;
-            firefighterSelect.appendChild(option);
-        });
-
-        //populating list below the map
-        var firefighterList = document.getElementById('firefighterList');
-        firefighterList.innerHTML = ''; // Clear existing list
-        allFirefighters.forEach(firefighter => {
-            var listItem = document.createElement('li');
-            let rankName = ranksMap[firefighter.rankId] || 'Unknown Rank';
-            listItem.textContent = `${firefighter.name} (Rank: ${rankName})`;
-            firefighterList.appendChild(listItem);
-        });
-
-        
-        // Check firefighter ID and set map visibility
-        allFirefighters.forEach(firefighter => {
-            if (firefighter.id === 2 || firefighter.id === 3 || firefighter.id === 4) {
-                document.getElementById('mapid').style.display = 'none';
-            }
-        });
-        
     } catch (error) {
         console.error('There was a problem with fetching and populating firefighters:', error);
     }
@@ -440,8 +402,6 @@ async function AcceptInterventionInvitation(interventionId){
 
 }
 
-
-
 async function DeclineInterventionInvitation(interventionId){
     try {
         const token = localStorage.getItem('authToken');
@@ -469,8 +429,8 @@ async function DeclineInterventionInvitation(interventionId){
         console.error('There was a problem with recovering the intervention:', error);
         return false;
     }
-
 }
+
 async function InviteFireFighterToInvitation(interventionId,firefighterId){
     try {
         const token = localStorage.getItem('authToken');
@@ -499,10 +459,3 @@ async function InviteFireFighterToInvitation(interventionId,firefighterId){
         return false;
     }
 }
-
-
-
-
-
-
-
