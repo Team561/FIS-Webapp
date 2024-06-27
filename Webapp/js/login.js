@@ -26,6 +26,7 @@ async function login() {
             console.log(data);
             window.location.href = "index.html";
         })
+        
         .fail(function(jqXHR, textStatus, errorThrown){
             console.log(jqXHR);
             errorMessage.textContent = 'Connection failed';

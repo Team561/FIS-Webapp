@@ -254,6 +254,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
+
 class Refresh{
     static funcsToCall = [];
 
@@ -279,6 +280,53 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log("PULSE");
     })
 });
+
+//intervention
+document.addEventListener('DOMContentLoaded', function () {
+    fetchAndDisplayInterventions();
+});
+
+async function fetchAndDisplayInterventions() {
+    // Fetch user interventions
+    const userInterventions = await Comms.fetchUserInterventions(true,false);
+    // Fetch commander interventions
+    const commanderInterventions = await Comms.fetchCommanderInterventions(true, false);
+
+    // Clear the existing lists
+    const firefighterList = document.getElementById('firefighterList');
+    const interventionList = document.getElementById('interventionList');
+    firefighterList.innerHTML = '';
+    interventionList.innerHTML = '';
+
+    // Display user interventions
+    if (userInterventions && userInterventions.length > 0) {
+        userInterventions.forEach(intervention => {
+            const li = document.createElement('li');
+            li.textContent = `Intervention: ${intervention.id} - ${intervention.description}`;
+            firefighterList.appendChild(li);
+        });
+    } else {
+        const li = document.createElement('li');
+        li.textContent = 'No user interventions found.';
+        firefighterList.appendChild(li);
+    }
+
+    // Display commander interventions
+    if (commanderInterventions && commanderInterventions.length > 0) {
+        commanderInterventions.forEach(intervention => {
+            const li = document.createElement('li');
+            li.textContent = `Intervention: ${intervention.id} - ${intervention.description}`;
+            interventionList.appendChild(li);
+        });
+    } else {
+        const li = document.createElement('li');
+        li.textContent = 'No commander interventions found.';
+        interventionList.appendChild(li);
+    }
+}
+
+// Optional: Refresh button to manually refresh interventions
+document.getElementById('refreshInterventionsBtn').addEventListener('click', fetchAndDisplayInterventions);
 
 class InterventionTypeBroker{
     static interventionTypes = [];

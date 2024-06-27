@@ -32,6 +32,7 @@ class Comms {
             console.error('There was a problem with fetching user interventions:', error);
             return null;
         }
+        
     }
 
     static async fetchCommanderInterventions(includeActive, includeInactive) {
