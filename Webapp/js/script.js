@@ -254,19 +254,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-class InvitationsHandler{
-    static invitations = [];
-
-    static async refreshInvitations(){
-        let fetchedInvitations = await Comms.FetchUserInvitations();
-
-        console.log("INVITATIONS")
-        console.log(fetchedInvitations);
-    }
-}
-
-InvitationsHandler.refreshInvitations();
-
 class Refresh{
     static funcsToCall = [];
 
@@ -319,7 +306,7 @@ class InterventionTypeBroker{
         if (Boolean(result))
             return result;
 
-        PushNotifs.pushNotificationFail("Error", "Type id does not exist, refresh the page?");
+        console.log("Type id does not exist, refresh the page?");
 
         return "Error";
     }
@@ -329,4 +316,81 @@ document.addEventListener('DOMContentLoaded', function () {
     InterventionTypeBroker.refreshTypes();
 });
 
+class InvitationsHandler{
+    static invitations = [];
+
+    static async refreshInvitations(){
+        let fetchedInvitations = await Comms.FetchUserInvitations();
+
+        let newInvitationDetected = false;
+
+        fetchedInvitations.$values.forEach(function(invitation){
+
+            let invitationAlreadyExists = false;
+
+            InvitationsHandler.invitations.forEach(function(prevInvitation){
+                if (prevInvitation.interventionId == invitation.interventionId){
+                    invitationAlreadyExists = true;
+                }
+            });
+
+            if (!invitationAlreadyExists){
+                newInvitationDetected = true;
+            }
+        });
+
+        if (newInvitationDetected){
+            PushNotifs.pushNotificationInfo("NEW NOTIFICATION", "A new notification has been detected.")
+        }
+        
+        InvitationsHandler.invitations = fetchedInvitations.$values;
+
+        let target = document.getElementById("invitationList");
+
+        target.innerHTML = "";
+
+        InvitationsHandler.invitations.forEach(function(invitation){
+            let targetElement = document.createElement("flex-row");
+            targetElement.classList.add("fWrap")
+
+            let targetTypename = InterventionTypeBroker.getTypeFromID(invitation.interventionTypeId);
+            
+            targetElement.innerHTML = 
+            `
+                <div class="fEqGrow">
+                    <div>
+                        Intervention ID: ${invitation.interventionId}
+                    </div>
+                    <div>
+                        Location: ${invitation.location}
+                    </div>
+                    <div>
+                        Type: ${targetTypename}
+                    </div> 
+                </div>
+
+                <flex-column class="fCentered fEqGrow" style="flex-grow: 1;">
+                    <button onclick="InvitationsHandler.acceptInvitation(${invitation.interventionId})"> ACCEPT REQUEST </button>
+                    <button onclick="InvitationsHandler.declineInvitation(${invitation.interventionId})"> DECLINE REQUEST </button>
+                </flex-column>
+            `
+
+            target.append(targetElement);
+        });
+    }
+
+    static async acceptInvitation(targetID){
+        Comms.AcceptInterventionInvitation(targetID);
+    }
+
+    static async declineInvitation(targetID){
+        Comms.DeclineInterventionInvitation(targetID);
+    }
+}
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    Refresh.subscribeToRefreshTimer(InvitationsHandler.refreshInvitations);
+    InvitationsHandler.refreshInvitations();
+});
 
