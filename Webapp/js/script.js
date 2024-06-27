@@ -288,9 +288,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 async function fetchAndDisplayInterventions() {
     // Fetch user interventions
-    const userInterventions = await Comms.fetchUserInterventions(true,false);
+    const userInterventions = (await Comms.fetchUserInterventions(true,false)).activeInterventions.$values;
     // Fetch commander interventions
-    const commanderInterventions = await Comms.fetchCommanderInterventions(true, false);
+    const commanderInterventions = (await Comms.fetchCommanderInterventions(true, false)).activeInterventions.$values;
 
     // Clear the existing lists
     const firefighterList = document.getElementById('firefighterList');
@@ -302,7 +302,7 @@ async function fetchAndDisplayInterventions() {
     if (userInterventions && userInterventions.length > 0) {
         userInterventions.forEach(intervention => {
             const li = document.createElement('li');
-            li.textContent = `Intervention: ${intervention.id} - ${intervention.description}`;
+            li.textContent = `Intervention: ${intervention.interventionId} - ${intervention.location}`;
             firefighterList.appendChild(li);
         });
     } else {
@@ -315,7 +315,7 @@ async function fetchAndDisplayInterventions() {
     if (commanderInterventions && commanderInterventions.length > 0) {
         commanderInterventions.forEach(intervention => {
             const li = document.createElement('li');
-            li.textContent = `Intervention: ${intervention.id} - ${intervention.description}`;
+            li.textContent = `Intervention: ${intervention.interventionId} - ${intervention.location}`;
             interventionList.appendChild(li);
         });
     } else {
@@ -326,7 +326,7 @@ async function fetchAndDisplayInterventions() {
 }
 
 // Optional: Refresh button to manually refresh interventions
-document.getElementById('refreshInterventionsBtn').addEventListener('click', fetchAndDisplayInterventions);
+//document.getElementById('refreshInterventionsBtn').addEventListener('click', fetchAndDisplayInterventions);
 
 class InterventionTypeBroker{
     static interventionTypes = [];
@@ -435,7 +435,6 @@ class InvitationsHandler{
         Comms.DeclineInterventionInvitation(targetID);
     }
 }
-
 
 document.addEventListener('DOMContentLoaded', function () {
     Refresh.subscribeToRefreshTimer(InvitationsHandler.refreshInvitations);

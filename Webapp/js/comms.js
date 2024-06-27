@@ -12,7 +12,7 @@ class Comms {
                 return null;
             }
 
-            let response = await fetch(`${Comms.apiBaseUrl}/api/Intervention/FetchUserIntervention?includeActive=${includeActive}&includeInactive=${includeInactive}`, {
+            let response = await fetch(`${Comms.apiBaseUrl}/api/Intervention/FetchUserInterventions?includeActive=${includeActive}&includeInactive=${includeInactive}`, {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${token}`,
