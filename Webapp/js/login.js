@@ -21,11 +21,12 @@ async function login() {
     data: JSON.stringify({ "username": username, "password": password })
     })
         .done(function(data, textStatus, jqXHR){
-            localStorage.setItem('token', data);
+            localStorage.setItem('AuthToken', data);
             alert('Logged in successfully!');
             console.log(data);
             window.location.href = "index.html";
         })
+        
         .fail(function(jqXHR, textStatus, errorThrown){
             console.log(jqXHR);
             errorMessage.textContent = 'Connection failed';
