@@ -407,7 +407,7 @@ class Comms {
                 return null;
             }
     
-            let response = await fetch(`${Comms.apiBaseUrl}/api/Intervention/AcceptIntervention?interventionID=${interventionId}`, {
+            let response = await fetch(`${Comms.apiBaseUrl}/api/Invitation/AcceptInterventionInvitation?interventionID=${interventionId}`, {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${token}`,
