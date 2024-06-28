@@ -13,24 +13,26 @@ async function login() {
         errorMessage.textContent = 'Please enter both username and password';
         return;
     }
-
-    $.ajax({
-        url: `${apiBaseUrl}/api/User/LogIn`,
-        type: "POST",
-        contentType: "application/json",
-        data: JSON.stringify({ username: username, password: password })
+   
+   $.ajax({
+    url: apiBaseUrl + "/api/User/LogIn",
+    type: "POST",
+    contentType: "application/json",
+    data: JSON.stringify({ "username": username, "password": password })
     })
-    .done(function(data, textStatus, jqXHR){
-        console.log(data);
+        .done(function(data, textStatus, jqXHR){
             localStorage.setItem('authToken', data);
-             alert('Logged in successfully!');
+            alert('Logged in successfully!');
             console.log(data);
-
-            window.location.replace("index.html");
+            window.location.href = "index.html";
+        })
         
-    })
-    .fail(function(jqXHR, textStatus, errorThrown){
-        console.error('Error response:', jqXHR.responseText);
-        errorMessage.textContent = 'Connection failed: ' + jqXHR.responseText;
+        .fail(function(jqXHR, textStatus, errorThrown){
+            console.log(jqXHR);
+            errorMessage.textContent = 'Connection failed';
+        })
+        .always(function(data_OR_jqXHR, textStatus, jqXHR_OR_errorThrown){
     });
+    
+    return;
 }

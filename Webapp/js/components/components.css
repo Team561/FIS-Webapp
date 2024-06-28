@@ -1,0 +1,91 @@
+.centered{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.textSuccess{
+	color: green;
+	font-weight: bold;
+}
+.textInfo{
+	color: blue;
+	font-weight: bold;
+}
+.textError{
+	color: red;
+	font-weight: bold;
+}
+
+br-half{
+	display:block;
+	margin-top: 0.5em;
+}
+
+push-notifications-component{
+	position: fixed;
+	z-index: 3000;
+	
+	height: 100vh;
+	width: 100vw;
+
+	pointer-events: none;
+	
+    display: flex;
+	flex-direction: column;
+    justify-content: flex-end;
+
+	word-wrap: break-word;
+
+	will-change: auto; /* Anim controlled by JS */
+	
+	overflow: visible; /* necessary for the animation */
+}
+
+push-notification{
+	box-shadow: 2px 2px 4px rgb(0, 0, 0);
+	margin: 0.5rem;	
+	border-radius: 5px;
+
+	width: min(calc(10rem + 10%), 50vw);
+	flex-shrink: 0;
+
+	top: 0;
+
+	background-color: white;
+	color: black;
+	border: 1px solid rgb(100, 100, 100);
+
+	pointer-events: auto;
+	
+	display:flex;
+	flex-direction: row;
+}
+push-notification > *{
+	padding: 0.5rem;
+}
+
+push-notification-success{
+	background-color: green;
+	min-width: 1.5rem;
+}
+push-notification-info{
+	background-color: blue;
+	min-width: 1.5rem;
+}
+push-notification-fail{
+	background-color: red;
+	min-width: 1.5rem;
+}
+
+push-notification-content{
+	border-left: 1px solid rgb(100, 100, 100);
+
+	padding: 1rem !important;
+
+	display: block;
+	flex-grow: 1;
+}
+
+.ui-icon{
+	filter: invert(1);
+}

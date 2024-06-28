@@ -9,6 +9,27 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <!-- Include Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <!-- Jquery -->
+    <script src="../js/jquery-3.7.1.min.js"></script>
+
+    <!-- Jquery UI -->
+    <link rel="stylesheet" href="../js/jquery-ui-1.13.2.custom/jquery-ui.css">
+    <script src="../js/jquery-ui-1.13.2.custom/external/jquery/jquery.js" type="text/javascript"></script>
+    <script src="../js/jquery-ui-1.13.2.custom/jquery-ui.js" type="text/javascript"></script>
+
+    <!-- Components, can be defered for ~speed~ -->
+    <link rel="stylesheet" href="../js/components/components.css"></link>
+    <script src="../js/components/componentPrereq.js" type="text/javascript" defer></script>
+    <script src="../js/components/push_notifications.js" type="text/javascript" defer></script>
+
+    <script>
+        $(document).ready(function(){
+            PushNotifs.pushNotificationSuccess("WEBSITE LOADED", "deleteme")
+            PushNotifs.pushNotificationInfo("WEBSITE LOADED", "deleteme")
+            PushNotifs.pushNotificationFail("WEBSITE LOADED", "deleteme")
+        })
+    </script>
 </head>
 <body>
     <header>
@@ -26,6 +47,7 @@
             </ul>
         </div>
     </nav>
+
     <main>
         <div class="container">
             <section id="home">
@@ -37,6 +59,55 @@
                 <div id="mapid" style="height: 500px;"></div>
                 <button id="showNotificationBtn">Show Notification</button> <!-- Example button to trigger notification -->
             </section>
+
+            <section>
+                <h2>List of interventions</h2>
+                <ul id="firefighterList"></ul>
+                <ul id="interventionList"></ul>
+            </section>
+           <section>
+                <h2>Invitations</h2>
+                <flex-column id="invitationList">
+                    <flex-row class="fWrap">
+                        <div class="fEqGrow">
+                            <div>
+                                Intervention ID: 45
+                            </div>
+                            <div>
+                                Location: 7367238658237.2785928759328, 23857293857329.238759832759
+                            </div>
+                            <div>
+                                Type: FIREEE   
+                            </div> 
+                        </div>
+
+                        <flex-column class="fCentered fEqGrow" style="flex-grow: 1;">
+                            <button> ACCEPT REQUEST </button>
+                            <button> DECLINE REQUEST </button>
+                        </flex-column>
+                    </flex-row>
+
+                    <flex-row class="fWrap">
+                        <div class="fEqGrow">
+                            <div>
+                                Intervention ID: 46
+                            </div>
+                            <div>
+                                Location: 73637.278328, 238572939.59
+                            </div>
+                            <div>
+                                Type: Technical   
+                            </div>
+                        </div>
+
+                        <flex-column class="fCentered fEqGrow" style="flex-grow: 1;">
+                            <button> ACCEPT REQUEST </button>
+                            <button> DECLINE REQUEST </button>
+                        </flex-column>
+                    </flex-row>
+                </flex-column>
+            </section>
+
             <section id="contact">
                 <h2>Contact Us</h2>
                 <p>If you have any questions, please contact us at <a href="mailto:firefighter@webapp.com">firefighter@webapp.com</a>.</p>
@@ -74,6 +145,7 @@
     <!-- Include Leaflet JavaScript -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <!-- Include your custom JavaScript -->
+    <script src="../js/comms.js"></script>
     <script src="../js/script.js"></script>
 </body>
 </html>
