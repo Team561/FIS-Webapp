@@ -159,3 +159,14 @@ flex-column{
     flex-direction: column;
     gap: 1rem;
 }
+
+.button {
+    background-color: #333333;
+    color: white;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
