@@ -263,9 +263,11 @@ class Refresh{
     }
     
     static triggerRefreshFunctions(){
-        Refresh.funcsToCall.forEach(function(func){
-            func();
-        });
+        if (localStorage.getItem('authToken') != null){
+            Refresh.funcsToCall.forEach(function(func){
+                func();
+            });
+        }
         Refresh.triggerNewTimer();
     }
 
@@ -276,9 +278,6 @@ class Refresh{
 
 document.addEventListener('DOMContentLoaded', function () {
     Refresh.triggerNewTimer();
-    Refresh.subscribeToRefreshTimer(function(){
-        console.log("PULSE");
-    })
 });
 
 //intervention
