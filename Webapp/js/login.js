@@ -22,9 +22,10 @@ async function login() {
     })
         .done(function(data, textStatus, jqXHR){
             localStorage.setItem('authToken', data);
-            alert('Logged in successfully!');
+            //alert('Logged in successfully!');
+            PushNotifs.pushNotificationInfo('Login', 'Logged in successfully!')
             console.log(data);
-            window.location.href = "index.html";
+            window.setTimeout(function() {window.location.href = "index.html";}, 1500);
         })
         
         .fail(function(jqXHR, textStatus, errorThrown){
